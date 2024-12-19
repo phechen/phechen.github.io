@@ -98,28 +98,43 @@
     }
 
     function makeDraggable(element) {
-        let isDragging = false;
-        let offsetX, offsetY;
+    let pos3 = 0, pos4 = 0;
 
-        element.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            offsetX = e.clientX - element.offsetLeft;
-            offsetY = e.clientY - element.offsetTop;
-        });
+    element.addEventListener('mousedown', dragMouseDown);
 
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                let x = e.clientX - offsetX;
-                let y = e.clientY - offsetY;
-                element.style.left = `${Math.max(0, Math.min(x, window.innerWidth - 100))}px`;
-                element.style.top = `${Math.max(0, Math.min(y, window.innerHeight - 100))}px`;
-            }
-        });
+    function dragMouseDown(e) {
+        e.preventDefault();
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.addEventListener('mouseup', closeDragElement);
+        document.addEventListener('mousemove', elementDrag);
     }
+
+    function elementDrag(e) {
+        e.preventDefault();
+        const pos1 = pos3 - e.clientX;
+        const pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+
+        const newTop = element.offsetTop - pos2;
+        const newLeft = element.offsetLeft - pos1;
+
+        // Ограничение перемещения
+        const maxWidth = element.offsetWidth;
+        const maxHeight = element.offsetHeight;
+        const constrainedTop = Math.max(0, Math.min(newTop, window.innerHeight - maxHeight));
+        const constrainedLeft = Math.max(0, Math.min(newLeft, window.innerWidth - maxWidth));
+
+        element.style.top = constrainedTop + "px";
+        element.style.left = constrainedLeft + "px";
+    }
+
+    function closeDragElement() {
+        document.removeEventListener('mouseup', closeDragElement);
+        document.removeEventListener('mousemove', elementDrag);
+    }
+}
 </script>
 
 </body>
