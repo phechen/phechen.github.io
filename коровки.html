@@ -11,33 +11,42 @@
         }
         .object {
             position: absolute;
-            transition: transform 0.2s ease; /* Добавлена плавная анимация */
-            cursor: grab; /* Изменение курсора при наведении */
+            transition: transform 0.2s linear(0 0%, 0.82 12.23%, 1 100%);
+            cursor: grab;
+            transform: scale(1.5);
+
         }
         .object.flipped {
             transform: scaleX(-1);
         }
+
         img {
             max-width: 100px;
             max-height: 100px;
         }
-        .test {
-            position: absolute;
-            left: 50%;
-            transform: translate(-50%, 0);
-        }
+
         .object:active {
-            cursor: grabbing; /* Изменение курсора при захвате */
+            cursor: grabbing;
         }
+        button {
+    background-color: green;
+    color: white;
+    border: 2px solid green;
+}
     </style>
 </head>
-<body>
+<body style="background-image: url('images/grass.gif');">
 <div id="container"></div>
-<button onclick="addObject()" class="test" style="top: 10px; left: 45%;">Добавить объект</button>
-<button onclick="removeAllObjects()" class="test" style="top: 10px; left: 55%;">Удалить все объекты</button>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; justify-items: center;">
+  <button onclick="addObject()" >Позвать коровку</button>
+  <button onclick="removeAllObjects()" >Отправить всех коровок спать</button>
+</div>
+
+
 <script>
     const imageFiles = [
-        "cow0.gif", "cow1.gif", "cow2.gif"  // Укажите пути к вашим изображениям
+        "cow0.gif", "cow1.gif", "cow2.gif"
     ];
 
     function addObject() {
@@ -51,16 +60,13 @@
             img.style.left = Math.random() * (window.innerWidth - 100) + 'px';
             document.getElementById('container').appendChild(img);
             moveObject(img);
-            makeDraggable(img); // Добавление перетаскивания
-        };
-        img.onerror = () => {
-            console.error(`Ошибка загрузки изображения: ${imagePath}`);
+            makeDraggable(img);
         };
     }
 
     function moveObject(obj) {
-        let xDirection = 0; // 1 - right, -1 - left
-        let yDirection = 0; // 1 - down, -1 - up
+        let xDirection = 0; 
+        let yDirection = 0; 
         setInterval(() => {
             const direction = Math.floor(Math.random() * 4);
             let top = parseInt(obj.style.top) || 0;
@@ -78,7 +84,7 @@
             obj.style.left = Math.max(0, Math.min(left, window.innerWidth - maxWidth)) + 'px';
 
             if (xDirection === -1) {
-                obj.classList.add('flipped');
+                obj.classList.add('object','flipped');
             }
             else {if (xDirection === 1) {
                 obj.classList.remove('flipped');
@@ -118,3 +124,4 @@
 
 </body>
 </html>
+
